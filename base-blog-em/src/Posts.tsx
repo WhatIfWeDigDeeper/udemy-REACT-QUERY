@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useQuery } from "react-query";
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import { Post } from 'types';
 
-import { PostDetail } from "./PostDetail";
+import { PostDetail } from './PostDetail';
 const maxPostPage = 10;
 
-async function fetchPosts(pageNum) {
+async function fetchPosts(pageNum: number) {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${pageNum}`
   );
@@ -15,7 +16,7 @@ const fakeApiStartPage = 1;
 
 export function Posts() {
   const [currentPage, setCurrentPage] = useState(fakeApiStartPage);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   // replace with useQuery
   const { data, error, isError, isLoading } = useQuery(
@@ -25,18 +26,22 @@ export function Posts() {
   );
 
   if (isLoading) {
-    return <h3>Loading...</h3>;
+    return (
+      <h3>
+        Loading...
+      </h3>
+    );
   }
   if (isError) {
     return <>
       <h3>Error!</h3>
-      <p>{error.toString()}</p>
+      <p>{(error as Error).toString()}</p>
       </>
   }
   return (
     <>
       <ul>
-        {data.map((post) => (
+        {data.map((post: Post) => (
           <li
             key={post.id}
             className="post-title"
